@@ -1,8 +1,6 @@
 package com.jiseguerra.reservation_system.common.response;
 
-import com.jiseguerra.reservation_system.ReservationSystemApplication;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.ProblemDetail;
 import reactor.util.annotation.NonNull;
 
 import java.time.ZoneOffset;

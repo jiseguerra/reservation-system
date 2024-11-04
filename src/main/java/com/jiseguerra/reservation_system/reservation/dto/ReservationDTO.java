@@ -1,5 +1,6 @@
 package com.jiseguerra.reservation_system.reservation.dto;
 
+import com.jiseguerra.reservation_system.reservation.enums.PreferredChannel;
 import com.jiseguerra.reservation_system.reservation.enums.Status;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
@@ -19,12 +20,14 @@ public class ReservationDTO {
 	private int numberOfGuests;
 	@Enumerated(EnumType.STRING)
 	private Status status;
+	@Enumerated(EnumType.STRING)
+	private PreferredChannel methodOfCommunication;
 
 	public ReservationDTO() {
 	}
 
 	public ReservationDTO(Long id, String name, String mobileNumber, String emailAddress,
-												Date dateTime, int numberOfGuests, Status status) {
+												Date dateTime, int numberOfGuests, Status status, PreferredChannel methodOfCommunication) {
 		this.id = id;
 		this.name = name;
 		this.mobileNumber = mobileNumber;
@@ -32,6 +35,7 @@ public class ReservationDTO {
 		this.dateTime = dateTime;
 		this.numberOfGuests = numberOfGuests;
 		this.status = status;
+		this.methodOfCommunication = methodOfCommunication;
 	}
 
 	public Long getId() {
@@ -88,5 +92,13 @@ public class ReservationDTO {
 
 	public void setStatus(Status status) {
 		this.status = status;
+	}
+
+	public PreferredChannel getMethodOfCommunication() {
+		return methodOfCommunication;
+	}
+
+	public void setMethodOfCommunication(PreferredChannel methodOfCommunication) {
+		this.methodOfCommunication = methodOfCommunication;
 	}
 }

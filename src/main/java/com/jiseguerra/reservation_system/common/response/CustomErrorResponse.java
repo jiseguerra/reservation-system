@@ -1,7 +1,5 @@
 package com.jiseguerra.reservation_system.common.response;
 
-import org.springframework.http.HttpStatus;
-
 import java.util.Map;
 
 /**

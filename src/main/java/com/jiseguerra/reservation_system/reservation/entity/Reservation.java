@@ -1,5 +1,6 @@
 package com.jiseguerra.reservation_system.reservation.entity;
 
+import com.jiseguerra.reservation_system.reservation.enums.PreferredChannel;
 import com.jiseguerra.reservation_system.reservation.enums.Status;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -9,7 +10,7 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 
-import java.util.Date;
+import java.time.ZonedDateTime;
 
 /**
  * @author John Ivan Seguerra
@@ -32,13 +33,16 @@ public class Reservation {
 	private String emailAddress;
 
 	@Column
-	private Date dateTime;
+	private ZonedDateTime dateTime;
 
 	@Column
 	private int numberOfGuests;
 
 	@Enumerated(EnumType.STRING)
 	private Status status;
+
+	@Enumerated(EnumType.STRING)
+	private PreferredChannel methodOfCommunication;
 
 	public Long getId() {
 		return id;
@@ -72,11 +76,11 @@ public class Reservation {
 		this.emailAddress = emailAddress;
 	}
 
-	public Date getDateTime() {
+	public ZonedDateTime getDateTime() {
 		return dateTime;
 	}
 
-	public void setDateTime(Date dateTime) {
+	public void setDateTime(ZonedDateTime dateTime) {
 		this.dateTime = dateTime;
 	}
 
@@ -94,5 +98,13 @@ public class Reservation {
 
 	public void setStatus(Status status) {
 		this.status = status;
+	}
+
+	public PreferredChannel getMethodOfCommunication() {
+		return methodOfCommunication;
+	}
+
+	public void setMethodOfCommunication(PreferredChannel methodOfCommunication) {
+		this.methodOfCommunication = methodOfCommunication;
 	}
 }

@@ -44,4 +44,5 @@ src
 - Utilized SQLite for embedded database
 - Opted to use MapStruct for easier ENTITY to DTO and vice versa conversion
 - Custom default exception handling
+- All date/time is in UTC format as a standard
 - Entire project is a simple yet robust implementation for a reservation system

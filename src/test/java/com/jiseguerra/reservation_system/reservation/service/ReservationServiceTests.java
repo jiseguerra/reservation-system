@@ -1,10 +1,12 @@
 package com.jiseguerra.reservation_system.reservation.service;
 
 import com.jiseguerra.reservation_system.exceptions.NoRecordFoundException;
+import com.jiseguerra.reservation_system.notification.service.NotificationService;
 import com.jiseguerra.reservation_system.reservation.dto.CreateReservationDTO;
 import com.jiseguerra.reservation_system.reservation.dto.ReservationDTO;
 import com.jiseguerra.reservation_system.reservation.dto.UpdateReservationDTO;
 import com.jiseguerra.reservation_system.reservation.entity.Reservation;
+import com.jiseguerra.reservation_system.reservation.enums.PreferredChannel;
 import com.jiseguerra.reservation_system.reservation.repository.ReservationRepository;
 import com.jiseguerra.reservation_system.reservation.service.impl.ReservationServiceImpl;
 import com.jiseguerra.reservation_system.reservation.utils.ReservationMapper;
@@ -27,16 +29,21 @@ import static org.mockito.ArgumentMatchers.any;
  * @version $Id: ReservationServiceTests.java, 2024-11-01 7:00 PM $$
  */
 @ExtendWith(MockitoExtension.class)
-public class ReservationServiceTests {
+class ReservationServiceTests {
 	ReservationService reservationService;
 	ReservationRepository reservationRepository;
 	ReservationMapper reservationMapper;
+	NotificationService notificationService;
 
 	@BeforeEach
 	void setup() {
 		reservationRepository = Mockito.mock(ReservationRepository.class);
 		reservationMapper = Mockito.mock(ReservationMapper.class);
-		reservationService = new ReservationServiceImpl(reservationRepository, reservationMapper);
+		notificationService = Mockito.mock(NotificationService.class);
+		reservationService = new ReservationServiceImpl(
+					reservationRepository,
+					reservationMapper,
+					notificationService);
 	}
 
 	@Test
@@ -47,7 +54,8 @@ public class ReservationServiceTests {
 								"09123456789",
 								"john@example.com",
 								new Date(),
-								4);
+								4,
+								PreferredChannel.PHONE);
 
 		Mockito.when(reservationRepository.save(any())).thenReturn(new Reservation());
 		Mockito.when(reservationMapper.dtoToEntity(any())).thenReturn(new Reservation());

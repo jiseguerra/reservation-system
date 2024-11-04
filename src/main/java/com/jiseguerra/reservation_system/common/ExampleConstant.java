@@ -12,7 +12,8 @@ public class ExampleConstant {
 									"mobileNumber": "09123456789",
 									"emailAddress": "johnsmith@example.com",
 									"dateTime": "2024-10-30T18:34:42.663Z",
-									"numberOfGuests": 5
+									"numberOfGuests": 5,
+									"methodOfCommunication": "PHONE"
               }
         """;
 

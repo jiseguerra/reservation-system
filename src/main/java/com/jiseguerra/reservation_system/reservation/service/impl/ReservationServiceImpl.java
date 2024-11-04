@@ -1,6 +1,8 @@
 package com.jiseguerra.reservation_system.reservation.service.impl;
 
+import com.jiseguerra.reservation_system.common.AppContants;
 import com.jiseguerra.reservation_system.exceptions.NoRecordFoundException;
+import com.jiseguerra.reservation_system.notification.service.NotificationService;
 import com.jiseguerra.reservation_system.reservation.dto.CreateReservationDTO;
 import com.jiseguerra.reservation_system.reservation.dto.ReservationDTO;
 import com.jiseguerra.reservation_system.reservation.dto.UpdateReservationDTO;
@@ -9,6 +11,7 @@ import com.jiseguerra.reservation_system.reservation.enums.Status;
 import com.jiseguerra.reservation_system.reservation.repository.ReservationRepository;
 import com.jiseguerra.reservation_system.reservation.service.ReservationService;
 import com.jiseguerra.reservation_system.reservation.utils.ReservationMapper;
+import com.jiseguerra.reservation_system.reservation.utils.StringFormatter;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
@@ -26,10 +29,15 @@ public class ReservationServiceImpl implements ReservationService {
 
 	private final ReservationRepository reservationRepository;
 	private final ReservationMapper reservationMapper;
+	private final NotificationService notificationService;
 
-	public ReservationServiceImpl(ReservationRepository reservationRepository, ReservationMapper reservationMapper) {
+	public ReservationServiceImpl(
+				ReservationRepository reservationRepository,
+				ReservationMapper reservationMapper,
+				NotificationService notificationService) {
 		this.reservationRepository = reservationRepository;
 		this.reservationMapper = reservationMapper;
+		this.notificationService = notificationService;
 	}
 
 
@@ -38,6 +46,19 @@ public class ReservationServiceImpl implements ReservationService {
 	@Override
 	public CompletableFuture<ReservationDTO> createReservation(CreateReservationDTO createDTO) {
 		Reservation reservation = reservationRepository.save(reservationMapper.dtoToEntity(createDTO));
+
+		// Notify customer through preferred method of communication
+		// Call notification service
+
+		// Transform dateTime first to readable format
+		String formattedDate = StringFormatter.formatDateTime(reservation.getDateTime());
+		String message = String.format(AppContants.NOTIFICATION_MESSAGE,
+					reservation.getId(), reservation.getName(), formattedDate);
+		notificationService.sendNotification(createDTO.methodOfCommunication(), message);
+
+		// Create a reminder 4 hours prior
+		notificationService.createReminder(reservation);
+
 		return CompletableFuture.completedFuture(reservationMapper.entityToDTO(reservation));
 	}
 
@@ -54,11 +75,16 @@ public class ReservationServiceImpl implements ReservationService {
 		Reservation reservation = reservationRepository.findById(id)
 					.orElseThrow(
 								() ->
-											new NoRecordFoundException("No record found")
+											new NoRecordFoundException("No record found", "Reservation")
 					);
-		reservation.setDateTime(updateDTO.dateTime());
-		System.out.println("updateDTO: " + updateDTO);
-		reservation.setNumberOfGuests(updateDTO.numberOfGuests());
+		if(updateDTO.dateTime() != null && !reservation.getDateTime().equals(updateDTO.dateTime())) {
+			reservation.setDateTime(updateDTO.dateTime());
+			notificationService.updateReminder(reservation);
+		}
+		if(updateDTO.numberOfGuests() != null
+					&& (updateDTO.numberOfGuests() > 0 && !updateDTO.numberOfGuests().equals(reservation.getNumberOfGuests()))) {
+			reservation.setNumberOfGuests(updateDTO.numberOfGuests());
+		}
 		reservationRepository.save(reservation);
 
 		return CompletableFuture.completedFuture(reservationMapper.entityToDTO(reservation));
@@ -95,7 +121,7 @@ public class ReservationServiceImpl implements ReservationService {
 	public CompletableFuture<ReservationDTO> cancelReservation(Long id) {
 		Reservation reservation = reservationRepository.findById(id)
 					.orElseThrow(
-								() -> new NoRecordFoundException("No record found")
+								() -> new NoRecordFoundException("No record found", "Reservation")
 					);
 		reservation.setStatus(Status.CANCELLED);
 		reservationRepository.save(reservation);

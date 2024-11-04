@@ -1,8 +1,8 @@
 package com.jiseguerra.reservation_system.reservation.controller.impl;
 
 import com.jiseguerra.reservation_system.common.V1Controller;
-import com.jiseguerra.reservation_system.reservation.dto.CreateReservationDTO;
 import com.jiseguerra.reservation_system.reservation.controller.ReservationController;
+import com.jiseguerra.reservation_system.reservation.dto.CreateReservationDTO;
 import com.jiseguerra.reservation_system.reservation.dto.ReservationDTO;
 import com.jiseguerra.reservation_system.reservation.dto.UpdateReservationDTO;
 import com.jiseguerra.reservation_system.reservation.service.ReservationService;

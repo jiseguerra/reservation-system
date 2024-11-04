@@ -6,7 +6,21 @@ package com.jiseguerra.reservation_system.exceptions;
  */
 public class NoRecordFoundException extends RuntimeException {
 
-	public NoRecordFoundException(String message) {
-		super(message);
+	private final String errorMessage;
+
+	private final String failedKey;
+
+	public NoRecordFoundException(String errorMessage, String failedKey) {
+		super("NoRecordFound");
+		this.errorMessage = errorMessage;
+		this.failedKey = failedKey;
+	}
+
+	public String getErrorMessage() {
+		return this.errorMessage;
+	}
+
+	public String getFailedKey() {
+		return this.failedKey;
 	}
 }

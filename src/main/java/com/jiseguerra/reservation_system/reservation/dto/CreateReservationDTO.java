@@ -1,8 +1,11 @@
 package com.jiseguerra.reservation_system.reservation.dto;
 
+import com.jiseguerra.reservation_system.reservation.enums.PreferredChannel;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import jakarta.validation.constraints.Email;
 
-import java.util.Date;
+import java.time.ZonedDateTime;
 
 /**
  * @author John Ivan Seguerra
@@ -12,6 +15,7 @@ public record CreateReservationDTO(
 			String name,
 			String mobileNumber,
 			@Email String emailAddress,
-			Date dateTime,
-			int numberOfGuests) {
+			ZonedDateTime dateTime,
+			int numberOfGuests,
+			@Enumerated(EnumType.STRING) PreferredChannel methodOfCommunication) {
 }
